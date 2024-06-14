@@ -1,0 +1,138 @@
+1.import pandas as pd
+import matplotlib.pyplot as plt
+file_path = r"/Metadata_Country_API_SP.POP.TOTL_DS2_en_csv_v2_84031.csv"
+data = pd.read_csv(file_path)
+variable_to_visualize = 'Region'
+plt.figure(figsize=(10, 6))
+data[variable_to_visualize].value_counts().plot(kind='bar')
+plt.title('Distribution of ' + variable_to_visualize)
+plt.xlabel(variable_to_visualize)
+plt.ylabel('Frequency')
+plt.xticks(rotation=45)
+plt.grid(axis='y', linestyle='--', alpha=0.7)
+plt.tight_layout()
+plt.show()
+
+
+2.import pandas as pd
+import matplotlib.pyplot as plt
+file_path = r"/content/train.csv"
+data = pd.read_csv(file_path)
+print(data.head())
+import pandas as pd
+import matplotlib.pyplot as plt
+file_path = r"/content/train.csv"
+data = pd.read_csv(file_path)
+print(data.head())
+print(data.isnull().sum())
+data['Age'].fillna(data['Age'].median(), inplace=True)
+plt.figure(figsize=(6, 4))
+data['Survived'].value_counts().plot(kind='bar')
+plt.title('Distribution of Survived')
+plt.xlabel('Survived')
+plt.ylabel('Count')
+plt.show()
+plt.figure(figsize=(6, 4))
+data.groupby('Sex')['Survived'].value_counts(normalize=True).unstack().plot(kind='bar', stacked=True)
+plt.title('Survival based on Sex')
+plt.xlabel('Sex')
+plt.ylabel('Proportion of Passengers')
+plt.legend(title='Survived', loc='upper right')
+plt.xticks(rotation=0)
+plt.show()
+plt.figure(figsize=(6, 4))
+data.groupby('Pclass')['Survived'].value_counts(normalize=True).unstack().plot(kind='bar', stacked=True)
+plt.title('Survival based on Pclass')
+plt.xlabel('Pclass')
+plt.ylabel('Proportion of Passengers')
+plt.legend(title='Survived', loc='upper right')
+plt.xticks(rotation=0)
+plt.show()
+plt.figure(figsize=(6, 4))
+data.groupby('Embarked')['Survived'].value_counts(normalize=True).unstack().plot(kind='bar', stacked=True)
+plt.title('Survival based on Embarked')
+plt.xlabel('Embarked')
+plt.ylabel('Proportion of Passengers')
+plt.legend(title='Survived', loc='upper right')
+plt.xticks(rotation=0)
+plt.show()
+plt.figure(figsize=(10, 6))
+plt.hist([data[data['Survived'] == 1]['Age'], data[data['Survived'] == 0]['Age']], stacked=True, color=['g', 'r'], bins=30, label=['Survived', 'Not Survived'])
+plt.title('Survival based on Age')
+plt.xlabel('Age')
+plt.ylabel('Count')
+plt.legend()
+plt.show()
+
+3.import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
+from sklearn.preprocessing import LabelEncoder
+file_path = "/content/bank-full.csv"
+bank_data = pd.read_csv(file_path, sep=';')
+print("First few rows of the dataset:")
+print(bank_data.head())
+print("\nDataset information:")
+print(bank_data.info())
+print("\nMissing values:")
+print(bank_data.isnull().sum())
+print("\nTarget variable distribution:")
+print(bank_data['y'].value_counts())
+label_encoder = LabelEncoder()
+bank_data['job'] = label_encoder.fit_transform(bank_data['job'])
+bank_data['marital'] = label_encoder.fit_transform(bank_data['marital'])
+bank_data['education'] = label_encoder.fit_transform(bank_data['education'])
+bank_data['default'] = label_encoder.fit_transform(bank_data['default'])
+bank_data['housing'] = label_encoder.fit_transform(bank_data['housing'])
+bank_data['loan'] = label_encoder.fit_transform(bank_data['loan'])
+bank_data['contact'] = label_encoder.fit_transform(bank_data['contact'])
+bank_data['month'] = label_encoder.fit_transform(bank_data['month'])
+bank_data['poutcome'] = label_encoder.fit_transform(bank_data['poutcome'])
+bank_data['y'] = label_encoder.fit_transform(bank_data['y'])
+X = bank_data.drop('y', axis=1)
+y = bank_data['y']
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+clf = DecisionTreeClassifier(random_state=42)
+clf.fit(X_train, y_train)
+y_pred = clf.predict(X_test)
+accuracy = accuracy_score(y_test, y_pred)
+print("\nAccuracy:", accuracy)
+print("\nClassification Report:")
+print(classification_report(y_test, y_pred))
+print("\nConfusion Matrix:")
+print(confusion_matrix(y_test, y_pred))
+
+4.import pandas as pd
+file_path = "/content/twitter_validation.csv"
+data = pd.read_csv(file_path)
+print(data.head())
+print(data.info())
+print(data.isnull().sum())
+
+import pandas as pd
+from textblob import TextBlob
+import matplotlib.pyplot as plt
+sample_data = {
+    'ID': [3364, 352, 8312, 4371, 4433, 6273],
+    'Entity': ['Facebook', 'Amazon', 'Microsoft', 'CS-GO', 'Google', 'FIFA'],
+    'Sentiment': ['Irrelevant', 'Neutral', 'Negative', 'Negative', 'Neutral', 'Negative']
+}
+data = pd.DataFrame(sample_data)
+def get_sentiment(text):
+    analysis = TextBlob(text)
+    polarity = analysis.sentiment.polarity
+    if polarity > 0:
+        return 'Positive'
+    elif polarity < 0:
+        return 'Negative'
+    else:
+        return 'Neutral'
+data['Sentiment'] = data['Sentiment'].apply(get_sentiment)
+plt.figure(figsize=(8, 6))
+data['Sentiment'].value_counts().plot(kind='bar', color=['blue', 'red', 'green'])
+plt.title('Sentiment Distribution')
+plt.xlabel('Sentiment')
+plt.ylabel('Count')
+plt.xticks(rotation=0)
+plt.show()
